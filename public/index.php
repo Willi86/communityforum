@@ -5,8 +5,7 @@ declare(strict_types=1);
 require_once dirname(__DIR__) . '/bootstrap.php';
 
 $pageTitle = 'CommunityHub';
-$baseUrl = '/communityforum/public';
-
+$baseUrl = '';
 require dirname(__DIR__) . '/templates/layout/header.php';
 
 ?>
