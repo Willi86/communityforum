@@ -3,7 +3,6 @@ declare(strict_types=1);
 
 require_once dirname(__DIR__) . '/bootstrap.php';
 
-session_start();
 
 $pageTitle = 'Skapa konto';
 $baseUrl = '';

@@ -1,8 +1,11 @@
 <?php
-
 declare(strict_types=1);
 
 use App\Database\Database;
+
+if (session_status() === PHP_SESSION_NONE) {
+    session_start();
+}
 
 require_once __DIR__ . '/src/Support/helpers.php';
 
@@ -15,7 +18,11 @@ spl_autoload_register(
         }
 
         $relativeClass = substr($class, strlen($prefix));
-        $file = __DIR__ . '/src/' . str_replace('\\', '/', $relativeClass) . '.php';
+
+        $file = __DIR__
+            . '/src/'
+            . str_replace('\\', '/', $relativeClass)
+            . '.php';
 
         if (is_file($file)) {
             require_once $file;
@@ -33,8 +40,13 @@ if (!is_file($configFile)) {
 
 $config = require $configFile;
 
-if (!isset($config['database']) || !is_array($config['database'])) {
-    throw new RuntimeException('The database configuration is missing.');
+if (
+    !isset($config['database'])
+    || !is_array($config['database'])
+) {
+    throw new RuntimeException(
+        'The database configuration is missing.'
+    );
 }
 
 $pdo = Database::connect($config['database']);
