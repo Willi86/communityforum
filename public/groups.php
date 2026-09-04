@@ -48,11 +48,17 @@ require dirname(__DIR__) . '/templates/layout/header.php';
         </div>
 
         <?php if ($groups === []): ?>
+
             <p>Det finns inga grupper ännu.</p>
+
         <?php else: ?>
+
             <div class="feature-grid">
+
                 <?php foreach ($groups as $group): ?>
+
                     <article class="feature-card">
+
                         <span class="feature-icon" aria-hidden="true">
                             #
                         </span>
@@ -70,10 +76,24 @@ require dirname(__DIR__) . '/templates/layout/header.php';
                             <?= e($group['first_name']) ?>
                             <?= e($group['last_name']) ?>
                         </p>
+
+                        <div class="hero-actions">
+                            <a
+                                class="button"
+                                href="/group.php?id=<?= (int) $group['id'] ?>"
+                            >
+                                Visa grupp
+                            </a>
+                        </div>
+
                     </article>
+
                 <?php endforeach; ?>
+
             </div>
+
         <?php endif; ?>
+
     </div>
 </section>
 
