@@ -15,6 +15,8 @@ $name = '';
 $topic = '';
 
 if ($_SERVER['REQUEST_METHOD'] === 'POST') {
+    require_csrf();
+
     $name = trim((string) ($_POST['name'] ?? ''));
     $topic = trim((string) ($_POST['topic'] ?? ''));
 
@@ -70,7 +72,9 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST') {
             header('Location: /groups.php');
             exit;
         } catch (Throwable $exception) {
-            $pdo->rollBack();
+            if ($pdo->inTransaction()) {
+                $pdo->rollBack();
+            }
 
             $errors[] = 'Gruppen kunde inte skapas.';
         }
@@ -82,6 +86,7 @@ require dirname(__DIR__) . '/templates/layout/header.php';
 
 <section class="section">
     <div class="container">
+
         <p class="eyebrow">Ny grupp</p>
 
         <h1>Skapa grupp</h1>
@@ -91,6 +96,7 @@ require dirname(__DIR__) . '/templates/layout/header.php';
         </p>
 
         <?php if ($errors !== []): ?>
+
             <div class="form-errors" role="alert">
                 <ul>
                     <?php foreach ($errors as $error): ?>
@@ -98,9 +104,13 @@ require dirname(__DIR__) . '/templates/layout/header.php';
                     <?php endforeach; ?>
                 </ul>
             </div>
+
         <?php endif; ?>
 
         <form method="post" class="form-card">
+
+            <?= csrf_input() ?>
+
             <div class="form-group">
                 <label for="name">Gruppnamn</label>
 
@@ -130,7 +140,9 @@ require dirname(__DIR__) . '/templates/layout/header.php';
             <button type="submit" class="button">
                 Skapa grupp
             </button>
+
         </form>
+
     </div>
 </section>
 

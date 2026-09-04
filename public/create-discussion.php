@@ -9,7 +9,11 @@ if (!isset($_SESSION['user_id'])) {
 }
 
 $userId = (int) $_SESSION['user_id'];
-$groupId = filter_input(INPUT_GET, 'group_id', FILTER_VALIDATE_INT);
+$groupId = filter_input(
+    INPUT_GET,
+    'group_id',
+    FILTER_VALIDATE_INT
+);
 
 if (!$groupId) {
     http_response_code(400);
@@ -65,6 +69,8 @@ $subject = '';
 $content = '';
 
 if ($_SERVER['REQUEST_METHOD'] === 'POST') {
+    require_csrf();
+
     $subject = trim((string) ($_POST['subject'] ?? ''));
     $content = trim((string) ($_POST['content'] ?? ''));
 
@@ -170,6 +176,8 @@ require dirname(__DIR__) . '/templates/layout/header.php';
         <?php endif; ?>
 
         <form method="post" class="form-card">
+
+            <?= csrf_input() ?>
 
             <div class="form-group">
                 <label for="subject">Rubrik</label>

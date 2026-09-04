@@ -93,6 +93,8 @@ if (!$isMember) {
  * Send a join request.
  */
 if ($_SERVER['REQUEST_METHOD'] === 'POST' && !$isMember) {
+    require_csrf();
+
     if ($requestStatus === null) {
         $joinStatement = $pdo->prepare(
             'INSERT INTO group_join_requests (
@@ -115,13 +117,9 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST' && !$isMember) {
 }
 
 /*
- * Get pending join requests.
+ * Get pending join requests and discussions.
  */
 $pendingRequests = [];
-
-/*
- * Get discussions.
- */
 $discussions = [];
 
 if ($isMember) {
@@ -267,6 +265,8 @@ require dirname(__DIR__) . '/templates/layout/header.php';
                                 method="post"
                                 action="/approve-request.php"
                             >
+                                <?= csrf_input() ?>
+
                                 <input
                                     type="hidden"
                                     name="request_id"
@@ -300,6 +300,8 @@ require dirname(__DIR__) . '/templates/layout/header.php';
         <?php else: ?>
 
             <form method="post" class="form-card">
+
+                <?= csrf_input() ?>
 
                 <h2>Gå med i gruppen</h2>
 

@@ -3,7 +3,6 @@ declare(strict_types=1);
 
 require_once dirname(__DIR__) . '/bootstrap.php';
 
-
 $pageTitle = 'Skapa konto';
 $baseUrl = '';
 
@@ -13,6 +12,8 @@ $lastName = '';
 $email = '';
 
 if ($_SERVER['REQUEST_METHOD'] === 'POST') {
+    require_csrf();
+
     $firstName = trim((string) ($_POST['first_name'] ?? ''));
     $lastName = trim((string) ($_POST['last_name'] ?? ''));
     $email = strtolower(trim((string) ($_POST['email'] ?? '')));
@@ -91,7 +92,9 @@ require dirname(__DIR__) . '/templates/layout/header.php';
 
 <section class="section">
     <div class="container">
+
         <p class="eyebrow">Bli medlem</p>
+
         <h1>Skapa konto</h1>
 
         <p>
@@ -100,6 +103,7 @@ require dirname(__DIR__) . '/templates/layout/header.php';
         </p>
 
         <?php if ($errors !== []): ?>
+
             <div class="form-errors" role="alert">
                 <ul>
                     <?php foreach ($errors as $error): ?>
@@ -107,9 +111,13 @@ require dirname(__DIR__) . '/templates/layout/header.php';
                     <?php endforeach; ?>
                 </ul>
             </div>
+
         <?php endif; ?>
 
         <form method="post" class="form-card">
+
+            <?= csrf_input() ?>
+
             <div class="form-group">
                 <label for="first_name">Förnamn</label>
 
@@ -178,7 +186,9 @@ require dirname(__DIR__) . '/templates/layout/header.php';
             <button type="submit" class="button">
                 Skapa konto
             </button>
+
         </form>
+
     </div>
 </section>
 

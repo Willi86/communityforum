@@ -21,11 +21,17 @@ if (isset($_SESSION['user_id'])) {
     $currentUser = $statement->fetch() ?: null;
 }
 ?>
+
 <!DOCTYPE html>
 <html lang="sv">
+
 <head>
     <meta charset="UTF-8">
-    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+
+    <meta
+        name="viewport"
+        content="width=device-width, initial-scale=1.0"
+    >
 
     <meta
         name="description"
@@ -41,30 +47,43 @@ if (isset($_SESSION['user_id'])) {
 </head>
 
 <body>
+
 <header class="site-header">
     <div class="container header-inner">
+
         <a class="brand" href="<?= $baseUrl ?>/">
             <span class="brand-mark" aria-hidden="true">C</span>
             <span>CommunityHub</span>
         </a>
 
         <nav class="main-nav" aria-label="Huvudmeny">
+
             <a href="<?= $baseUrl ?>/">
                 Startsida
             </a>
 
             <?php if ($currentUser): ?>
+
                 <span>
                     Hej, <?= e($currentUser['first_name']) ?>
                 </span>
 
-                <a
-                    class="button button-small button-secondary"
-                    href="<?= $baseUrl ?>/logout.php"
+                <form
+                    method="post"
+                    action="<?= $baseUrl ?>/logout.php"
                 >
-                    Logga ut
-                </a>
+                    <?= csrf_input() ?>
+
+                    <button
+                        type="submit"
+                        class="button button-small button-secondary"
+                    >
+                        Logga ut
+                    </button>
+                </form>
+
             <?php else: ?>
+
                 <a
                     class="button button-small button-secondary"
                     href="<?= $baseUrl ?>/login.php"
@@ -78,8 +97,11 @@ if (isset($_SESSION['user_id'])) {
                 >
                     Skapa konto
                 </a>
+
             <?php endif; ?>
+
         </nav>
+
     </div>
 </header>
 

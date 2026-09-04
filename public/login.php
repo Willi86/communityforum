@@ -3,7 +3,6 @@ declare(strict_types=1);
 
 require_once dirname(__DIR__) . '/bootstrap.php';
 
-
 if (isset($_SESSION['user_id'])) {
     header('Location: /');
     exit;
@@ -15,6 +14,8 @@ $error = '';
 $email = '';
 
 if ($_SERVER['REQUEST_METHOD'] === 'POST') {
+    require_csrf();
+
     $email = strtolower(trim((string) ($_POST['email'] ?? '')));
     $password = (string) ($_POST['password'] ?? '');
 
@@ -55,7 +56,9 @@ require dirname(__DIR__) . '/templates/layout/header.php';
 
 <section class="section">
     <div class="container">
+
         <p class="eyebrow">Välkommen tillbaka</p>
+
         <h1>Logga in</h1>
 
         <p>
@@ -63,12 +66,17 @@ require dirname(__DIR__) . '/templates/layout/header.php';
         </p>
 
         <?php if ($error !== ''): ?>
+
             <div class="form-errors" role="alert">
                 <p><?= e($error) ?></p>
             </div>
+
         <?php endif; ?>
 
         <form method="post" class="form-card">
+
+            <?= csrf_input() ?>
+
             <div class="form-group">
                 <label for="email">E-post</label>
 
@@ -97,7 +105,9 @@ require dirname(__DIR__) . '/templates/layout/header.php';
             <button type="submit" class="button">
                 Logga in
             </button>
+
         </form>
+
     </div>
 </section>
 

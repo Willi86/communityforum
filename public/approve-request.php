@@ -8,8 +8,20 @@ if (!isset($_SESSION['user_id'])) {
     exit;
 }
 
+if ($_SERVER['REQUEST_METHOD'] !== 'POST') {
+    http_response_code(405);
+    exit('Metoden är inte tillåten.');
+}
+
+require_csrf();
+
 $userId = (int) $_SESSION['user_id'];
-$requestId = filter_input(INPUT_POST, 'request_id', FILTER_VALIDATE_INT);
+
+$requestId = filter_input(
+    INPUT_POST,
+    'request_id',
+    FILTER_VALIDATE_INT
+);
 
 if (!$requestId) {
     http_response_code(400);

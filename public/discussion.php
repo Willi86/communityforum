@@ -9,7 +9,11 @@ if (!isset($_SESSION['user_id'])) {
 }
 
 $userId = (int) $_SESSION['user_id'];
-$discussionId = filter_input(INPUT_GET, 'id', FILTER_VALIDATE_INT);
+$discussionId = filter_input(
+    INPUT_GET,
+    'id',
+    FILTER_VALIDATE_INT
+);
 
 if (!$discussionId) {
     http_response_code(404);
@@ -76,6 +80,8 @@ $content = '';
  * Add reply.
  */
 if ($_SERVER['REQUEST_METHOD'] === 'POST') {
+    require_csrf();
+
     $content = trim((string) ($_POST['content'] ?? ''));
 
     if ($content === '') {
@@ -153,6 +159,7 @@ require dirname(__DIR__) . '/templates/layout/header.php';
             <h2>Inlägg</h2>
 
             <?php foreach ($posts as $post): ?>
+
                 <article>
                     <p>
                         <strong>
@@ -171,10 +178,12 @@ require dirname(__DIR__) . '/templates/layout/header.php';
 
                     <hr>
                 </article>
+
             <?php endforeach; ?>
         </div>
 
         <?php if ($errors !== []): ?>
+
             <div class="form-errors" role="alert">
                 <ul>
                     <?php foreach ($errors as $error): ?>
@@ -182,9 +191,12 @@ require dirname(__DIR__) . '/templates/layout/header.php';
                     <?php endforeach; ?>
                 </ul>
             </div>
+
         <?php endif; ?>
 
         <form method="post" class="form-card">
+
+            <?= csrf_input() ?>
 
             <h2>Svara</h2>
 
