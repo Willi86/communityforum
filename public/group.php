@@ -116,9 +116,13 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST' && !$isMember) {
 
 /*
  * Get pending join requests.
- * Only members are allowed to see them.
  */
 $pendingRequests = [];
+
+/*
+ * Get discussions.
+ */
+$discussions = [];
 
 if ($isMember) {
     $pendingStatement = $pdo->prepare(
@@ -141,6 +145,26 @@ if ($isMember) {
     ]);
 
     $pendingRequests = $pendingStatement->fetchAll();
+
+    $discussionStatement = $pdo->prepare(
+        'SELECT
+            discussions.id,
+            discussions.subject,
+            discussions.created_at,
+            users.first_name,
+            users.last_name
+         FROM discussions
+         INNER JOIN users
+            ON users.id = discussions.user_id
+         WHERE discussions.group_id = :group_id
+         ORDER BY discussions.created_at DESC'
+    );
+
+    $discussionStatement->execute([
+        'group_id' => $groupId,
+    ]);
+
+    $discussions = $discussionStatement->fetchAll();
 }
 
 $pageTitle = $group['name'];
@@ -171,6 +195,49 @@ require dirname(__DIR__) . '/templates/layout/header.php';
                 <p>
                     Som medlem kan du delta i gruppens diskussioner.
                 </p>
+
+                <div class="hero-actions">
+                    <a
+                        class="button"
+                        href="/create-discussion.php?group_id=<?= (int) $group['id'] ?>"
+                    >
+                        Starta diskussion
+                    </a>
+                </div>
+            </div>
+
+            <div class="form-card">
+                <h2>Diskussioner</h2>
+
+                <?php if ($discussions === []): ?>
+
+                    <p>Det finns inga diskussioner ännu.</p>
+
+                <?php else: ?>
+
+                    <?php foreach ($discussions as $discussion): ?>
+
+                        <article>
+                            <h3>
+                                <a href="/discussion.php?id=<?= (int) $discussion['id'] ?>">
+                                    <?= e($discussion['subject']) ?>
+                                </a>
+                            </h3>
+
+                            <p>
+                                Startad av
+                                <?= e($discussion['first_name']) ?>
+                                <?= e($discussion['last_name']) ?>
+                            </p>
+
+                            <small>
+                                <?= e($discussion['created_at']) ?>
+                            </small>
+                        </article>
+
+                    <?php endforeach; ?>
+
+                <?php endif; ?>
             </div>
 
             <div class="form-card">
